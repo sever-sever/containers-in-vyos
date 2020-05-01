@@ -1,15 +1,20 @@
 # containers-in-vyos
 
-# Get shell inside container
+Copy create-lxc.sh to Vyos1.3 tmp dir and execute
+
+chmod +x /tmp/create-lxc.sh
+./tmp/create-lxc.sh
+
+#### Get shell inside container
 lxc-attach -n my-container
 
-# Show containers
+#### Show containers
 lxc-ls -f
 
-# stop container
+#### stop container
 lxc-stop -n my-container
 
-# Remove container
+### Remove container
 lxc-destroy -n my-container
 
 ### in Alpne
