@@ -6,11 +6,11 @@ chmod +x /tmp/create-lxc.sh
 
 /tmp/create-lxc.sh
 
-### Get shell inside container
-lxc-attach -n my-container
-
 ### Show containers
 lxc-ls -f
+
+### Get shell inside container
+lxc-attach -n my-container
 
 ### Stop container
 lxc-stop -n my-container
@@ -22,7 +22,7 @@ lxc-destroy -n my-container
 
 setup-interfaces
 
-rc-service networkg start
+rc-service networkg restart
 
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
 
