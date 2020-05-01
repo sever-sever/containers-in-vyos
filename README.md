@@ -3,15 +3,16 @@
 Copy create-lxc.sh to Vyos1.3 tmp dir and execute
 
 chmod +x /tmp/create-lxc.sh
+
 ./tmp/create-lxc.sh
 
-#### Get shell inside container
+### Get shell inside container
 lxc-attach -n my-container
 
-#### Show containers
+### Show containers
 lxc-ls -f
 
-#### stop container
+### Stop container
 lxc-stop -n my-container
 
 ### Remove container
