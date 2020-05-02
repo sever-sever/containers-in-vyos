@@ -26,6 +26,9 @@ sudo bash -c "cat > /etc/lxc/.config/lxc/default.conf << EOF
 lxc.net.0.type = veth
 lxc.net.0.link = ${BR_NAME}
 lxc.net.0.flags = up
+lxc.net.0.name = eth1
+lxc.net.0.ipv4.address = 10.0.3.2/24 10.0.3.255
+lxc.net.0.ipv4.gateway = 10.0.3.1
 lxc.apparmor.profile = generated
 lxc.apparmor.allow_nesting = 1
 lxc.idmap = u 0 100000 65536
