@@ -54,6 +54,6 @@ sudo lxc-start -n $CONTAINER_NAME -d
 # Post-install
 sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo \"nameserver 1.1.1.1\" > /etc/resolv.conf"
 sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "apk add nano openssh"
-sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo \"PermitRootLogin yes\" > /etc/ssh/sshd_config"
+sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo \"PermitRootLogin yes\" >> /etc/ssh/sshd_config"
 sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo root:$CONTAINER_ROOT_PASS | chpasswd" # Root password for ssh container
 sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "service sshd start"
