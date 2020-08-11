@@ -2,7 +2,7 @@
 
 BR_NAME="lxcbr0"
 BR_IP="10.0.3.1/24"
-CONTAINER_NAME="my-container"
+CONTAINER_NAME="c1"
 CONTAINER_ROOT_PASS="superpass"
 
 # Create temp apt sources for install lxc
@@ -12,6 +12,8 @@ deb-src http://deb.debian.org/debian buster main ' > /etc/apt/sources.list.d/mys
 
 sudo apt-get update
 sudo apt-get -y install lxc xz-utils
+# If you want to create containers other than alpine
+sudo apt-get -y install lxc-templates
 
 # Delete temp apt sources
 sudo rm -f /etc/apt/sources.list.d/mysource.list
@@ -26,7 +28,8 @@ else
     echo "bridge [$BR_NAME] is exists."
 fi
 
-sudo ifconfig $BR_NAME $BR_IP
+sudo ip link set dev $BR_NAME up
+sudo ip addr add dev $BR_NAME $BR_IP
 
 sudo mkdir -p /etc/lxc/.config/lxc
 
@@ -46,15 +49,15 @@ lxc.idmap = g 0 100000 65536
 EOF
 "
 # Create lxc container "Alpine"
-sudo lxc-create -f /etc/lxc/.config/lxc/default.conf --template download --name my-container -- --dist alpine --release 3.10 --arch amd64
+sudo lxc-create -f /etc/lxc/.config/lxc/default.conf --template download --name ${CONTAINER_NAME} -- --dist alpine --release 3.12 --arch amd64
 
 # Start lxc container
-sudo lxc-start -n $CONTAINER_NAME -d
+sudo lxc-start -n ${CONTAINER_NAME} -d
 
-# Post-install
-sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo \"nameserver 1.1.1.1\" > /etc/resolv.conf"
-sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "apk add nano openssh"
-sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo \"PermitRootLogin yes\" >> /etc/ssh/sshd_config"
-sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo root:$CONTAINER_ROOT_PASS | chpasswd" # Root password for ssh container
-sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "ssh-keygen -t rsa -f /root/.ssh/id_rsa -q -P \"\"" # Generate ssh key
-sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "service sshd start"
+# Post-install. It's needed correct SNAT on VyOS
+#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo \"nameserver 1.1.1.1\" > /etc/resolv.conf"
+#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "apk add nano openssh"
+#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo \"PermitRootLogin yes\" >> /etc/ssh/sshd_config"
+#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo root:$CONTAINER_ROOT_PASS | chpasswd" # Root password for ssh container
+#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "ssh-keygen -t rsa -f /root/.ssh/id_rsa -q -P \"\"" # Generate ssh key
+#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "service sshd start"
