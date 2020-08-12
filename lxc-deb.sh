@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-BR_NAME="lxcbr0"
+# http://gudok.xyz/lxcdeb/
+
+BR_NAME="br999"
 BR_IP="10.0.3.1/24"
-CONTAINER_NAME="c1"
-CONTAINER_ROOT_PASS="superpass"
+CONTAINER_NAME="rtr"
 
 # Create temp apt sources for install lxc
 sudo cat <<< '
@@ -11,9 +12,9 @@ deb http://deb.debian.org/debian buster main
 deb-src http://deb.debian.org/debian buster main ' > /etc/apt/sources.list.d/mysource.list
 
 sudo apt-get update
-sudo apt-get -y install lxc xz-utils debootstrap
+sudo apt-get -y install lxc xz-utils
 # If you want to create containers other than alpine
-sudo apt-get -y install lxc-templates
+sudo apt-get -y install lxc-templates debootstrap
 
 # Delete temp apt sources
 sudo rm -f /etc/apt/sources.list.d/mysource.list
@@ -43,23 +44,14 @@ lxc.net.0.ipv4.address = 10.0.3.2/24
 lxc.net.0.ipv4.gateway = 10.0.3.1
 lxc.apparmor.profile = generated
 lxc.apparmor.allow_nesting = 1
-lxc.idmap = u 0 100000 65536
-lxc.idmap = g 0 100000 65536
+#lxc.idmap = u 0 100000 65536
+#lxc.idmap = g 0 100000 65536
 #lxc.start.auto = 1   # Autostart
 EOF
 "
 
-# lxc-create -t debian -n c1
-# Create lxc container "Alpine"
-sudo lxc-create -f /etc/lxc/.config/lxc/default.conf --template download --name ${CONTAINER_NAME} -- --dist alpine --release 3.12 --arch amd64
+# Create lxc Debian container
+sudo lxc-create -f /etc/lxc/.config/lxc/default.conf -t /usr/share/lxc/templates/lxc-debian -n ${CONATINER_NAME} -- -r buster -a amd64
 
 # Start lxc container
 sudo lxc-start -n ${CONTAINER_NAME} -d
-
-# Post-install. It's needed correct SNAT on VyOS
-#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo \"nameserver 1.1.1.1\" > /etc/resolv.conf"
-#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "apk add nano openssh"
-#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo \"PermitRootLogin yes\" >> /etc/ssh/sshd_config"
-#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "echo root:$CONTAINER_ROOT_PASS | chpasswd" # Root password for ssh container
-#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "ssh-keygen -t rsa -f /root/.ssh/id_rsa -q -P \"\"" # Generate ssh key
-#sudo lxc-attach -n $CONTAINER_NAME -- /bin/ash -c "service sshd start"
