@@ -39,7 +39,7 @@ sudo bash -c "cat > /etc/lxc/.config/lxc/default.conf << EOF
 lxc.net.0.type = veth
 lxc.net.0.link = ${BR_NAME}
 lxc.net.0.flags = up
-lxc.net.0.name = eth1
+lxc.net.0.name = eth0
 lxc.net.0.ipv4.address = 10.0.3.2/24
 lxc.net.0.ipv4.gateway = 10.0.3.1
 lxc.apparmor.profile = generated
@@ -51,7 +51,7 @@ EOF
 "
 
 # Create lxc Debian container
-sudo lxc-create -f /etc/lxc/.config/lxc/default.conf -t /usr/share/lxc/templates/lxc-debian -n ${CONATINER_NAME} -- -r buster -a amd64
+sudo lxc-create -f /etc/lxc/.config/lxc/default.conf -t /usr/share/lxc/templates/lxc-debian -n ${CONTAINER_NAME} -- -r buster -a amd64
 
 # Start lxc container
 sudo lxc-start -n ${CONTAINER_NAME} -d
