@@ -51,7 +51,7 @@ EOF
 
 # lxc-create -t debian -n c1
 # Create lxc container "Alpine"
-sudo lxc-create -f /etc/lxc/.config/lxc/default.conf --template download --name ${CONTAINER_NAME} -- --dist alpine --release 3.12 --arch amd64
+sudo lxc-create -f /etc/lxc/.config/lxc/default.conf --template download --name ${CONTAINER_NAME} -- --dist alpine --release 3.12 --arch amd64 --no-validate
 
 # Start lxc container
 sudo lxc-start -n ${CONTAINER_NAME} -d
