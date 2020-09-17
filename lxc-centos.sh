@@ -57,3 +57,13 @@ sudo lxc-create -f /etc/lxc/.config/lxc/default.conf -t /usr/share/lxc/templates
 
 # Start lxc container
 sudo lxc-start -n ${CONTAINER_NAME} -d
+
+# Additionat SNAT rules for VyOS. Replace interface and network for your installation.
+
+echo "
+# SNAT rules for VyOS
+set nat source rule 100 description 'Internet for containers'
+set nat source rule 100 outbound-interface 'eth0'
+set nat source rule 100 source address '10.0.3.0/24'
+set nat source rule 100 translation address 'masquerade'
+"
