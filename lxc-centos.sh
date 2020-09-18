@@ -51,9 +51,9 @@ lxc.apparmor.allow_nesting = 1
 EOF
 "
 
-# Create lxc Ubuntu container
-sudo lxc-create -f /etc/lxc/.config/lxc/default.conf -t /usr/share/lxc/templates/lxc-centos -n ${CONTAINER_NAME}
-# sudo lxc-create -f /etc/lxc/.config/lxc/default.conf -t /usr/share/lxc/templates/lxc-ubuntu -n ${CONTAINER_NAME} -- -r bionic -a amd64
+# Create lxc Centos 7 container
+sudo lxc-create -f /etc/lxc/.config/lxc/default.conf -t /usr/share/lxc/templates/lxc-centos -n ${CONTAINER_NAME} -- -R 7 -a x86_64
+#sudo lxc-create -f /etc/lxc/.config/lxc/default.conf -t /usr/share/lxc/templates/lxc-centos -n ${CONTAINER_NAME}
 
 # Start lxc container
 sudo lxc-start -n ${CONTAINER_NAME} -d
